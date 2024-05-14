@@ -45,6 +45,7 @@ ROSTER_HEADER = [
 
 USER_ENTERED = "USER_ENTERED"
 
+# Student Card tabs
 DATA_SHEET_NAME = "Data"
 CARD_VIEWS = ["Dashboard", "Scores"]
 CARD_SHEETS = CARD_VIEWS + [DATA_SHEET_NAME]

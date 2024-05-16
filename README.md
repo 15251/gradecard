@@ -1,5 +1,5 @@
 # Setup
-1. Create a repo from the [15251 fork of the Gradecard template](https://github.com/15251/gradecard). Name this repo `gradecard-<university>-<course>-<your semester>` (e.g. gradecard-cmu-15251-s24).
+1. Create a repo from this template [15251 fork of the Gradecard template](https://github.com/15251/gradecard). Name this repo `gradecard-<university>-<course>-<your semester>` (e.g. gradecard-cmu-15251-s24).
 2. Clone the repo to the machines of everyone who will be managing student cards.
 3. You will need Python 3.7+. Install it if you don’t have it.
 4. Create a virtual environment in the repo folder with `python3 -m venv env`
@@ -16,8 +16,8 @@
 	- This creates a `token.json` file in your root directory. The token expires pretty frequently. If it does, just remove the file from the directory and run python auth.py again.
 ### Google Drive setup
 1. Create a new folder called `<semester> Gradecard` (e.g. S24 Gradecard). Navigate inside it.
-2. Create a new sheet called `Gradecard`. This is where the course staff will manage grades. Feel free to use this example as a starting point ([CMU 15-251 Gradecard]()).
-3. Create a new sheet called `Student Card Template`. This is the base sheet that is used to create student cards for each student. Feel free to use this example below as a starting point ([CMU 15-251 Student Card Template]())
+2. Create a new sheet called `Gradecard`. This is where the course staff will manage grades. Feel free to use this example as a starting point ([CMU 15-251 Gradecard](https://docs.google.com/spreadsheets/d/1eNCHtvxZI_7de0heMYdF-f3v73m3fyHw0T1nO5xsT_I/edit?usp=sharing)).
+3. Create a new sheet called `Student Card Template`. This is the base sheet that is used to create student cards for each student. Feel free to use this example below as a starting point ([CMU 15-251 Student Card Template](https://docs.google.com/spreadsheets/d/1PAdAOFydGL64mEY8aTsnn55k79MWcHmfz-QNVoibm0o/edit?usp=sharing))
 4. Create a new folder called `Student Cards`. This is where Student Cards for each student will be populated.
 
 Here is an overview of the sheets:
@@ -25,11 +25,11 @@ Here is an overview of the sheets:
 	1. This contains a record of all scores, attendance, and anything else you would like to manage.
 	2. The `export` tab in this spreadsheet contains all the data that is actually pushed to student cards, and so should be spot checked before every sync. Also, make sure that you only include columns that you intend students to see on their student cards.
 	3. The `roster` tab is where the student roster will be populated.
-	4. All other tabs can be customized to fit your course structure. 
-	5. An example of this spreadsheet can be found here. Again, `export` and `roster` are the only required tabs.
+	4. All other tabs can be customized to fit your course structure.
 2. The `Student Card Template` spreadsheet is the base of every student’s card.
 	1. Data synced appears in the `Data` tab in columns A and B, where column A contains keys and column B contains values. This data will come directly from the `export` tab.
 	2. You can customize `Dashboard` and `Scores` tabs such that it is helpful and clear to students.	
+
 Now, update `secrets.py` with the `GRADECARD_SPREADSHEET_ID`, `BASE_STUDENT_SPREADSHEET_ID`, and `STUDENT_CARDS_FOLDER_ID`. You may push this update to Github. Gradecard is now set up.
 # Creating Student Cards
 ### Adding a roster
@@ -49,9 +49,9 @@ You are now ready to create student cards.
 6. In the CLI, choose `Update Views`
 7. Choose to update both sheets (`Dashboard` and `Scores`)
 8. Press enter when asked which students’ views to update: this indicates all students.
-The last 4 steps are the steps to do whenever you update the base card. This syncs all students’ views to match that of the base card.
+The last 4 steps are the steps to do whenever you update the base card. This syncs all students’ cards to match that of the base card.
 ### Emailing Students
-In the menu, under Extensions, you should be able to access Apps Script. If not, get it as an add-on. The code used to send emails to students is included below in case the script is not copied.
+Now, go back to our Google sheet `Gradecard`. In the menu, under Extensions, you should be able to access Apps Script. If not, get it as an add-on. The code used to send emails to students is included below in case the script is not copied.
 
 ```
 function sendEmails() {
@@ -86,5 +86,24 @@ Now, you should have Student Cards set up and shared with students. Here are the
 	2. andrew ID (e.g. `gyeongwk`): only this student's card will be synced
 	3. andrew ID followed by `...` (e.g. `gyeongwk...`): this student and all following students' cards will be synced (according to the order in `export` tab)
 
-### Contact Info
-Please contact 15-251 course staff or Professor Ada (aada@cs.cmu.edu) with any questions on how to set up Gradecard for your course.
+# Managing Gradecard
+Managing grade data in `Gradecard` is totally customizable. Just make sure the final data you would like to push to student cards is in the `export` tab. As an additional resource, we have included commonly needed use cases in the example ([CMU 15251 Gradecard](https://docs.google.com/spreadsheets/d/1eNCHtvxZI_7de0heMYdF-f3v73m3fyHw0T1nO5xsT_I/edit?usp=sharing)).
+### Managing Attendance
+#### Option 1: Manually enter attendance
+Please refer to the `att` tab. You can take attendance by clicking the checkbox for a given student for a given date. In 15-251, we use this tab to take recitation attendance.
+#### Option 2: Import attendance from an external source
+Please refer to the `lect_att` tab. Another way to take attendance is to use an external resource such as Google Forms, Acadly, etc. Then, with this data, create a spreadsheet. On the far right column, you can paste links to other spreadsheets to import data from them. Then, use formulas to systematically track attendance. 
+### Managing Homework and Exam Scores
+#### Option 1: Manually enter scores
+Please refer to `hwx` and `mtx` tabs. These tabs are templates that are used to track individual homework and exam scores (e.g. `hw1`, `mt1`, etc). You can modify these templates to fit the structure of your homeworks and exams. One option is to manually enter scores for each student. 
+### Option 2: Import grades from external source (Gradescope)
+Another option is importing grades from external sources such as Gradescope. You can download a csv file from Gradescope and import it into `Gradecard`. Then, use formulas to manage grades. 
+### Organization
+Managing attendance, homework, and exam score data can quickly pile up. Hence, it is important to maintain good organization of Gradecard. This is one method that has been proven to be effective for 15-251.
+- `col` tab: To make things easier to read, some indexes for `VLOOKUP`s are calculated in the col sheet, then pulled into the formula via another `VLOOKUP`. In general, if you ever add columns to a sheet, go to the `col` tab and change values column D such that the right column is indicated for each ID.
+- `settings` tab: here you can keep track of meta data such as maximum attendance, maximum homework scores, and which assignments or exams have been entered, etc.
+- `assignment` tab: you can assign students to different sections, or assign mentor TAs to each student using this tab.
+
+Ultimately, the way you manage student grades is up to you! In order for this pipeline to work, the only requirement is that the data you wish to push to student cards end up in the `export` tab.
+### Contact Information
+Please contact 15-251 course staff with any questions on how to set up Gradecard for your course. The current point of contact is gyeongwk@andrew.cmu.edu.

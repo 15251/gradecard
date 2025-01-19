@@ -1,6 +1,6 @@
 # Commented out for public version
-# config.yaml
-# secrets.py
+config.yaml
+secrets.py
 
 credentials.json
 token.json
